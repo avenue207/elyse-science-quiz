@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elyse 六年级科学备考 | Science Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #4ecdc4;
+    --coral: #ff6b6b;
+    --sun: #ffe66d;
+    --navy: #2c3e6b;
+    --lavender: #a8b4f8;
+    --green: #51cf66;
+    --bg: #f0f4ff;
+    --card: #ffffff;
+    --text: #1a1f3a;
+    --muted: #6b7280;
+    --border: #e2e8f0;
+    --shadow: 0 4px 24px rgba(44,62,107,0.10);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #3d5a9e 100%);
+    color: white;
+    padding: 28px 24px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  header .stars { font-size: 28px; margin-bottom: 4px; }
+  header h1 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: clamp(20px,5vw,30px); letter-spacing: -0.5px; }
+  header p { margin-top: 6px; opacity: 0.8; font-size: 14px; }
+  .badge {
+    display: inline-block;
+    background: var(--sun);
+    color: var(--navy);
+    font-weight: 800;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-top: 8px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ── PROGRESS ── */
+  #progress-bar-wrap {
+    background: white;
+    padding: 14px 20px;
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; gap: 12px;
+  }
+  #progress-label { font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+  #progress-track {
+    flex: 1; height: 10px; background: var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--mint), var(--lavender));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #score-live {
+    font-size: 13px; font-weight: 700;
+    color: var(--mint); white-space: nowrap;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* ── SECTION TITLE ── */
+  .section-header {
+    background: var(--navy);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 24px 0 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .section-header span { opacity: 0.7; font-size: 13px; font-weight: 600; }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+  .question-card.answered-correct { border-color: var(--green); }
+  .question-card.answered-wrong { border-color: var(--coral); }
+
+  .q-header {
+    background: linear-gradient(90deg, #f8faff, #eef2ff);
+    padding: 14px 18px 10px;
+    display: flex; align-items: flex-start; gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .q-num {
+    background: var(--navy);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    min-width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .q-text { font-size: 15px; font-weight: 500; line-height: 1.6; flex: 1; }
+  .q-marks {
+    font-size: 12px; color: var(--muted); font-weight: 600;
+    white-space: nowrap; padding-top: 4px;
+  }
+
+  /* diagram/image hint */
+  .q-diagram {
+    background: #f8faff;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 18px 0;
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .q-body { padding: 14px 18px 18px; }
+
+  /* ── MCQ OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .option {
+    display: flex; align-items: center; gap: 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+    background: white;
+    user-select: none;
+  }
+  .option:hover:not(.locked) { border-color: var(--lavender); background: #f5f7ff; }
+  .option.selected { border-color: var(--navy); background: #eef2ff; }
+  .option.correct { border-color: var(--green); background: #f0fdf4; }
+  .option.wrong { border-color: var(--coral); background: #fff5f5; }
+  .option.show-answer { border-color: var(--green); background: #f0fdf4; opacity: 0.85; }
+  .option-letter {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800; font-size: 13px;
+    min-width: 24px; height: 24px;
+    border-radius: 6px;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .option.selected .option-letter { background: var(--navy); color: white; }
+  .option.correct .option-letter { background: var(--green); color: white; }
+  .option.wrong .option-letter { background: var(--coral); color: white; }
+  .option.show-answer .option-letter { background: var(--green); color: white; }
+
+  /* ── SHORT ANSWER ── */
+  .short-answer-group { margin-top: 10px; }
+  .sub-label {
+    font-size: 13px; font-weight: 600; color: var(--navy);
+    margin: 10px 0 4px;
+  }
+  textarea, input[type="text"] {
+    width: 100%; border: 2px solid var(--border);
+    border-radius: 10px; padding: 10px 12px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px; color: var(--text);
+    background: white; resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea:focus, input[type="text"]:focus { border-color: var(--lavender); }
+  textarea.correct-input { border-color: var(--green); background: #f0fdf4; }
+  textarea.wrong-input { border-color: var(--coral); background: #fff5f5; }
+  input[type="text"].correct-input { border-color: var(--green); background: #f0fdf4; }
+  input[type="text"].wrong-input { border-color: var(--coral); background: #fff5f5; }
+
+  /* matching */
+  .match-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .match-left { font-size: 13px; font-weight: 600; min-width: 80px; }
+  select {
+    flex: 1; border: 2px solid var(--border); border-radius: 10px;
+    padding: 8px 10px; font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px; background: white; outline: none;
+    transition: border-color 0.2s;
+  }
+  select:focus { border-color: var(--lavender); }
+  select.correct-input { border-color: var(--green); background: #f0fdf4; }
+  select.wrong-input { border-color: var(--coral); background: #fff5f5; }
+
+  /* checkbox */
+  .checkbox-group { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
+  .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .checkbox-item input { width: 16px; height: 16px; cursor: pointer; }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-btn {
+    margin-top: 12px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    margin-top: 12px;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: none;
+  }
+  .feedback.correct { background: #f0fdf4; border: 1.5px solid var(--green); color: #166534; }
+  .feedback.wrong { background: #fff5f5; border: 1.5px solid var(--coral); color: #991b1b; }
+  .feedback .fb-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .feedback .fb-answer { margin-top: 6px; }
+  .feedback .fb-explain { margin-top: 6px; font-style: italic; color: #374151; }
+
+  /* ── FINAL SUBMIT ── */
+  #finish-section {
+    text-align: center;
+    margin: 32px 0 16px;
+  }
+  #finish-btn {
+    background: linear-gradient(135deg, var(--coral), #ff8e53);
+    color: white; border: none;
+    border-radius: 14px;
+    padding: 16px 48px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900; font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,107,107,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  #finish-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,107,107,0.4); }
+
+  /* ── RESULTS SCREEN ── */
+  #results-screen {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+  .results-hero {
+    background: linear-gradient(135deg, var(--navy), #3d5a9e);
+    color: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .results-hero .trophy { font-size: 56px; margin-bottom: 8px; }
+  .results-hero h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 26px; }
+  .results-hero .score-big {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 64px;
+    color: var(--sun);
+    line-height: 1.1;
+    margin: 12px 0;
+  }
+  .results-hero .score-sub { opacity: 0.8; font-size: 15px; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .stat-val { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 28px; }
+  .stat-card .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+  .stat-card.green .stat-val { color: var(--green); }
+  .stat-card.red .stat-val { color: var(--coral); }
+  .stat-card.blue .stat-val { color: var(--navy); }
+
+  .wrong-section-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900; font-size: 18px;
+    color: var(--navy);
+    margin: 24px 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .review-card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+    border-left: 5px solid var(--coral);
+    overflow: hidden;
+  }
+  .review-card-header {
+    background: #fff5f5;
+    padding: 12px 16px;
+    font-weight: 700; font-size: 14px;
+    color: #991b1b;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .review-card-body { padding: 14px 16px; }
+  .review-card-body .rc-q { font-size: 14px; font-weight: 500; margin-bottom: 10px; line-height: 1.5; }
+  .review-card-body .rc-yours {
+    font-size: 13px; color: var(--coral);
+    background: #fff5f5; border-radius: 8px; padding: 7px 10px;
+    margin-bottom: 6px;
+  }
+  .review-card-body .rc-correct {
+    font-size: 13px; color: #166534;
+    background: #f0fdf4; border-radius: 8px; padding: 7px 10px;
+    margin-bottom: 6px;
+  }
+  .review-card-body .rc-explain {
+    font-size: 13px; color: #374151;
+    background: #f8faff; border-radius: 8px; padding: 7px 10px;
+    border-left: 3px solid var(--lavender);
+    line-height: 1.6;
+  }
+
+  #retry-btn {
+    display: block;
+    margin: 32px auto 0;
+    background: var(--navy);
+    color: white; border: none;
+    border-radius: 14px;
+    padding: 14px 40px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900; font-size: 16px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  #retry-btn:hover { opacity: 0.85; }
+
+  /* ── MISC ── */
+  .locked { pointer-events: none; }
+  .tick::before { content: '✓ '; }
+  .cross::before { content: '✗ '; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .question-card { animation: fadeIn 0.35s ease both; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stars">⭐ 科学备考 ⭐</div>
+  <h1>Elyse's Science Quiz</h1>
+  <p>六年级科学 · 2024/2025 第一次课堂评估</p>
+  <div class="badge">50 分 · 1 小时</div>
+</header>
+
+<div id="progress-bar-wrap">
+  <span id="progress-label">题目 0 / 0</span>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <span id="score-live">0 分</span>
+</div>
+
+<div id="quiz-main">
+  <main id="quiz-body"></main>
+
+  <div id="finish-section">
+    <button id="finish-btn" onclick="submitAll()">🎯 提交答案 · Submit</button>
+  </div>
+</div>
+
+<div id="results-screen"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  QUESTION DATA
+// ═══════════════════════════════════════════════════════════════
+const QUESTIONS = [
+
+// ══ A 组 选择题 (10%) ══
+{
+  id:'A1', section:'A', type:'mcq', marks:1,
+  text:'小黄用本生灯加热一杯500ml的水，每隔一分钟测量一次水温。实验结果显示水被加热的时间越长，水的温度越高。这项实验中的操纵性变数是什么？',
+  options:['水被加热的时间','水的温度','水的体积','火力的大小'],
+  answer:0,
+  explain:'操纵性变数（Manipulated Variable）是实验者主动改变的变量。在此实验中，小黄主动改变的是加热时间，所以答案是A。水的温度是反应性变数（结果），水的体积和火力大小是固定变数。'
+},
+{
+  id:'A2', section:'A', type:'mcq', marks:1,
+  text:'下图显示小红说的话："我们可根据玻璃弹珠移动的距离来确定玻璃弹珠与表面之间的摩擦力。" 这属于哪种科学概念？',
+  options:['推断','操作性定义','控制变数','假设'],
+  answer:1,
+  explain:'操作性定义（Operational Definition）是用可测量的方式来定义一个变量。小红用"弹珠移动的距离"来测量摩擦力，这是将抽象概念（摩擦力）用可观察/测量的方式定义，所以是B 操作性定义。'
+},
+{
+  id:'A3', section:'A', type:'mcq', marks:1,
+  text:'下图显示男性的生殖器官，标有 I、II、III、IV。哪项器官能产生精子？',
+  diagram:'图中 I=输精管, II=附睾, III=睾丸, IV=阴囊',
+  options:['I','II','III','IV'],
+  answer:2,
+  explain:'精子由睾丸（Testis）产生，图中 III 为睾丸。附睾（II）储存和运输精子，输精管（I）输送精子，阴囊（IV）保护睾丸。答案是C (III)。'
+},
+{
+  id:'A4', section:'A', type:'mcq', marks:1,
+  text:'下图显示小绿所进行的一项活动（小绿坐在桌前阅读）。根据上图，哪项活动属于相同种类的反应？',
+  options:['心脏跳动','呼吸','消化食物','阅读'],
+  answer:3,
+  explain:'阅读是自主反应（有意识地控制的行为），需要大脑主动控制。心脏跳动、呼吸和消化食物都是自主神经系统控制的非自主反应。答案是D 阅读。'
+},
+{
+  id:'A5', section:'A', type:'mcq', marks:1,
+  text:'人体的神经系统包括X系统和周围神经系统，而X系统主要是由哪个部分组成？',
+  options:['脑和脊椎','脑、脊髓和感官','脑和脊髓','脊髓、感官和肌肉'],
+  answer:2,
+  explain:'中枢神经系统（Central Nervous System，即X系统）由脑（Brain）和脊髓（Spinal Cord）组成。感官属于周围神经系统。答案是C。'
+},
+{
+  id:'A6', section:'A', type:'mcq', marks:1,
+  text:'下面是有关微生物Y的说明："是地球上数量最多的生物。土壤中、水中、空气中、生物的表面和内部，都有微生物的存在。" 哪项有可能是微生物Y？',
+  options:['真菌','细菌','病毒','藻类'],
+  answer:1,
+  explain:'细菌（Bacteria）是地球上数量最多、分布最广的微生物，存在于土壤、水、空气中以及生物体内外。答案是B 细菌。'
+},
+{
+  id:'A7', section:'A', type:'mcq', marks:1,
+  text:'下图显示一片霉变的面包在一个星期后的变化（霉菌扩散增多）。根据面包的变化，作出结论。',
+  options:['微生物会呼吸','微生物会移动','微生物会生长和繁殖','微生物会导致食物中毒'],
+  answer:2,
+  explain:'面包上的霉菌点从少变多，面积扩大，说明微生物能够生长和繁殖（grow and reproduce）。答案是C。（注：虽然微生物也会呼吸，但从图中观察到的是数量增多，结论应指向生长繁殖。）'
+},
+{
+  id:'A8', section:'A', type:'mcq', marks:1,
+  text:'小黑在P盆和Q盆里种了不同数量的幼苗。一个星期后，Q盆（幼苗拥挤茂密）比P盆（幼苗稀少）的幼苗长得更差。根据Q盆的观察结果，作出结论。',
+  options:['幼苗之间的竞争比较不激烈','花盆越小，幼苗长得越茂盛','幼苗的数量越多，竞争越激烈','幼苗的数量越少，竞争越激烈'],
+  answer:2,
+  explain:'Q盆幼苗数量多、生长较差，说明数量越多，植物之间对水分、阳光、养分的竞争越激烈，导致每株幼苗获得的资源减少，生长变差。答案是C。'
+},
+{
+  id:'A9', section:'A', type:'mcq', marks:1,
+  text:'下图显示鲨鱼和海狗（鲨鱼捕食海狗）。这两种动物之间的关系和哪组动物之间的关系相似？',
+  options:['蜘蛛和苍蝇','大象和豹','小丑鱼和海葵','老虎和熊'],
+  answer:0,
+  explain:'鲨鱼捕食海狗是捕食关系（Predator-Prey）。蜘蛛捕食苍蝇也是捕食关系，答案是A。小丑鱼和海葵是共生关系，大象和豹/老虎和熊之间没有典型的捕食关系（是竞争关系）。'
+},
+{
+  id:'A10', section:'A', type:'mcq', marks:1,
+  text:'哪项是保护和复育的方法？\nI 举办环保活动\nII 提倡使用塑料袋\nIII 灌输保护和复育意识\nIV 有节制地进行发展活动',
+  options:['I 和 II 而已','I、II 和 III 而已','I、III 和 IV 而已','I、II、III 和 IV'],
+  answer:2,
+  explain:'提倡使用塑料袋（II）会加重环境污染，不是保护和复育的方法。举办环保活动（I）、灌输意识（III）、有节制地发展（IV）都是保护和复育的方法。答案是C。'
+},
+
+// ══ B 组 简答题 (8%) ══
+{
+  id:'B1a', section:'B', type:'short', marks:1,
+  text:'B1. 下图显示植物为菜佛士花和大树（菜佛士花寄生在大树根部）。\n\n(a) 写出以上两项植物的共生关系。',
+  answer:'寄生（Parasitism）/ 菜佛士花寄生于大树',
+  explain:'菜佛士花（Rafflesia）没有叶绿素，完全依靠宿主大树获取养分，而大树因此受损。这种关系是寄生关系（Parasitism）：一方获益，另一方受害。'
+},
+{
+  id:'B1b', section:'B', type:'mcq', marks:1,
+  text:'B1. (b) 根据1(a)，哪一组植物也有同样的共生关系？\nS组：菟丝子寄生在大树上\nT组：鸟巢蕨附生在油棕上',
+  options:['S组（菟丝子和大树）','T组（鸟巢蕨和油棕）'],
+  answer:0,
+  explain:'菟丝子（Cuscuta）像菜佛士花一样，是寄生植物，从宿主（大树）吸取养分，对宿主有害——这是寄生关系。而鸟巢蕨附生在油棕上是附生关系（Epiphytism），不伤害宿主，是不同的关系。答案是S组。'
+},
+{
+  id:'B1c', section:'B', type:'checkbox', marks:2,
+  text:'B1. (c) 植物之间除了共生，还会相互竞争什么？（选出正确答案，可多选）',
+  options:['配偶','栖息地','水分','阳光'],
+  answer:[1,2,3],
+  explain:'植物之间竞争水分（Water）、阳光（Sunlight）和栖息地/空间（Space/Habitat）。植物不竞争"配偶"（配偶是动物繁殖概念）。答案：栖息地✓、水分✓、阳光✓。'
+},
+{
+  id:'B2a', section:'B', type:'short', marks:2,
+  text:'B2. 下图显示女性的生殖器官，标有(a)和(b)两个位置，部位P和部位Q。\n\n(a) 请在空格中填写人类繁殖过程的名称：\n图中(a)位置发生的过程 / 图中(b)位置发生的过程',
+  subquestions:[
+    {label:'(a) 图中(a)的过程名称', answer:'受精（Fertilisation）', placeholder:'填写(a)的过程名称'},
+    {label:'(b) 图中(b)的过程名称', answer:'着床（Implantation）', placeholder:'填写(b)的过程名称'}
+  ],
+  explain:'(a) 受精（Fertilisation）发生在输卵管，精子和卵子结合形成受精卵。(b) 着床（Implantation）是受精卵发育成胚泡后附着在子宫内壁的过程。'
+},
+{
+  id:'B2c', section:'B', type:'match', marks:2,
+  text:'B2. (c) 部位P和Q的功能是什么？连一连。\n（部位P = 子宫；部位Q = 卵巢）',
+  items:['部位P（子宫）','部位Q（卵巢）'],
+  choices:['把卵子从卵巢输入子宫','是胚胎发育和胎儿成长的地方','产生卵子'],
+  answer:[1, 2],
+  explain:'部位P是子宫（Uterus）：是胚胎发育和胎儿成长的地方。部位Q是卵巢（Ovary）：产生卵子（Ovum）。输卵管负责把卵子从卵巢输送到子宫，但题目中部位P和Q分别对应子宫和卵巢。'
+},
+
+// ══ C 组 详答题 (32%) ══
+{
+  id:'C1ai', section:'C', type:'short', marks:2,
+  text:'C1. 人类透过精子和卵子的结合来繁殖下一代。\n\na. (i) 根据图（受精卵→胚胎→胎儿），写出精子和卵子结合后的变化过程：\n受精卵、___、___',
+  subquestions:[
+    {label:'第二阶段', answer:'胚胎（Embryo）', placeholder:'填写第二阶段'},
+    {label:'第三阶段', answer:'胎儿（Foetus/Fetus）', placeholder:'填写第三阶段'}
+  ],
+  explain:'受精卵（Fertilised Egg/Zygote）→ 胚胎（Embryo，细胞分裂形成）→ 胎儿（Foetus，器官开始发育）。这是人类早期发育的三个阶段。'
+},
+{
+  id:'C1aii', section:'C', type:'short', marks:1,
+  text:'C1. a. (ii) 精子和卵子在母亲体内的哪个位置结合？',
+  answer:'输卵管（Fallopian Tube / Oviduct）',
+  explain:'受精（精子与卵子结合）发生在输卵管（Fallopian Tube）内，然后受精卵移动到子宫着床发育。'
+},
+{
+  id:'C1b', section:'C', type:'short', marks:1,
+  text:'C1. b. 胎儿在第九个月时有什么变化？',
+  answer:'胎儿的头部向下转动，准备出生（头部朝向子宫颈方向）',
+  explain:'在第九个月（临近分娩），胎儿通常会将头部朝下转动（头位），使头部靠近子宫颈，为分娩（出生）做准备。'
+},
+{
+  id:'C1c', section:'C', type:'mcq', marks:2,
+  text:'C1. c. 下图显示小明的说法："虽然胚胎或胎儿在羊水里无法呼吸和进食，但是依然可以得到氧气和营养素。"\n\n你是否支持小明的说法？',
+  options:['是（支持）','否（不支持）'],
+  answer:0,
+  explain:'支持小明的说法。胎盘（Placenta）和脐带（Umbilical Cord）从母亲的血液中为胚胎或胎儿提供氧气和营养素。虽然胎儿在羊水中无法直接呼吸和进食，但通过胎盘和脐带，母亲的血液可以传送氧气和营养给胎儿。'
+},
+{
+  id:'C2a', section:'C', type:'mcq', marks:2,
+  text:'C2. 小丽进行实验研究微生物的生长条件。\n面团X：温糖水 + 面粉 + 酵母菌 → 15分钟后变大\n面团Y：面粉 + 酵母菌（无温糖水）→ 15分钟后没有变化\n\na. 根据上述实验设置，你认为这是一个公平的实验吗？',
+  options:['公平（Fair）','不公平（Not Fair）'],
+  answer:0,
+  explain:'这是一个公平实验，因为实验中只有一个操纵性变数——温糖水的存在（面团X有，面团Y没有）。其他条件（面粉用量、酵母菌用量、时间、温度）都相同，控制良好。'
+},
+{
+  id:'C2bi', section:'C', type:'short', marks:1,
+  text:'C2. b. (i) 写出实验中的固定性变数（Constant Variable）。',
+  answer:'实验前，面团的大小（两个面团初始大小相同）',
+  explain:'固定性变数是保持不变的变量。在此实验中，面团的初始大小（实验前的大小）是固定的——两组面团实验前大小一样，确保实验的公平性。'
+},
+{
+  id:'C2bii', section:'C', type:'short', marks:1,
+  text:'C2. b. (ii) 写出控制固定性变数的方法。',
+  answer:'使用相同大小的面团进行试验',
+  explain:'控制固定变数的方法：使用相同大小（等量）的面团进行实验，确保初始条件一致，结果差异只由操纵变数（温糖水）引起。'
+},
+{
+  id:'C2c', section:'C', type:'short', marks:1,
+  text:'C2. c. 根据面团X的观察结果，作出推断（Inference）。',
+  answer:'酵母菌呼出二氧化碳（使面团膨胀变大）',
+  explain:'面团X加了温糖水后变大，是因为酵母菌在有糖分的温暖环境下进行发酵，产生二氧化碳气体（CO₂），气体使面团膨胀变大。推断：酵母菌呼出（释放）二氧化碳。'
+},
+{
+  id:'C2d', section:'C', type:'short', marks:1,
+  text:'C2. d. 写出可使用微生物制作的另一种食品。',
+  answer:'馒头 / 面包 / 泡菜 / 酸奶 / 豆腐乳（任何一种）',
+  explain:'微生物（酵母菌、细菌等）可用于制作多种食品：馒头、面包（酵母菌发酵）、泡菜、酸奶（乳酸菌）、豆腐乳、酱油、醋等。'
+},
+{
+  id:'C3a', section:'C', type:'short', marks:1,
+  text:'C3. 小花准备两盆相同高度和相同种类的幼苗P和Q，把P放在房间里（人工光），把Q放在空旷的草地（自然光）。两个星期后Q长得比P茂盛。\n\na. 写出这项实验的目的。',
+  answer:'为了研究幼苗摆放的位置与幼苗两个星期后的生长情况之间的关系。',
+  explain:'实验目的应说明"研究什么变量对什么结果的影响"。此实验目的：研究幼苗摆放的位置（室内/户外）如何影响幼苗的生长情况。'
+},
+{
+  id:'C3bi', section:'C', type:'short', marks:1,
+  text:'C3. b. (i) 写出这项实验中的操纵性变数（Manipulated Variable）。',
+  answer:'幼苗摆放的位置（房间里 vs 空旷草地）',
+  explain:'操纵性变数是实验者主动改变的变量。小花把一盆放室内、一盆放室外，主动改变的是幼苗的摆放位置。'
+},
+{
+  id:'C3bii', section:'C', type:'short', marks:1,
+  text:'C3. b. (ii) 写出这项实验中的反应性变数（Responding Variable）。',
+  answer:'两个星期后，幼苗的生长情况',
+  explain:'反应性变数是因操纵变数改变而产生变化的结果变量。此实验中，受位置影响而变化的是幼苗的生长情况（高度、茂盛程度等）。'
+},
+{
+  id:'C3ci', section:'C', type:'short', marks:1,
+  text:'C3. c. (i) 写出这项实验的一个观察结果。',
+  answer:'幼苗Q长得比幼苗P茂盛 / 幼苗Q比幼苗P获得较多的阳光',
+  explain:'观察结果应基于图中可见的事实。两个星期后，幼苗Q（放在草地）比幼苗P（放在室内）长得更茂盛，这是直接观察到的结果。'
+},
+{
+  id:'C3cii', section:'C', type:'short', marks:1,
+  text:'C3. c. (ii) 根据4(c)i 的答案，作出推断（Inference）。',
+  answer:'幼苗Q比幼苗P获得较多的阳光，所以长得更茂盛',
+  explain:'推断是基于观察结果做出的解释。Q放在户外草地，获得更多自然阳光，光合作用更旺盛，因此生长更茂盛。这是从观察结果推断出的原因。'
+},
+{
+  id:'C3di', section:'C', type:'short', marks:1,
+  text:'C3. d. 一个月后，小花发现幼苗Q的周围都长满了野草。\n(i) 野草将会对幼苗Q造成什么影响？',
+  answer:'幼苗将会无法茁壮地生长（因为与野草竞争资源）',
+  explain:'野草与幼苗Q竞争同一土地中的水分、养分和阳光。资源减少，幼苗Q的生长会受到抑制，无法茁壮成长。'
+},
+{
+  id:'C3dii', section:'C', type:'short', marks:1,
+  text:'C3. d. (ii) 根据3(d)i 项的答案，写出幼苗Q和野草之间相互竞争的因素。',
+  answer:'养分（Nutrients）/ 水分（Water）/ 阳光（Sunlight）/ 空间（Space）',
+  explain:'幼苗Q和野草之间竞争的因素主要有：养分、水分、阳光和生长空间。这些都是植物生存所需的有限资源。'
+},
+{
+  id:'C3e', section:'C', type:'short', marks:1,
+  text:'C3. e. 如果植物失去相互竞争的能力，预测这将会带来什么后果。',
+  answer:'植物将面临物种绝灭的危机',
+  explain:'若植物失去竞争能力，弱势的植物无法抢到足够的阳光、水分和养分，最终会死亡甚至绝种（extinction）。竞争是自然界维持生物多样性和物种进化的重要机制。'
+},
+{
+  id:'C3f', section:'C', type:'mcq', marks:2,
+  text:'C3. f. 下图显示有关植物之间的共生关系的说明：\n说明P：桫椤树是附生植物。它会附生在树木的高处。\n说明Q：常春藤是攀缘植物，它会攀附在高大的树上以获得生存需求。\n\n根据上述的说明，哪个说明是正确的？加以说明。',
+  options:['说明P（桫椤树是附生植物）','说明Q（常春藤是攀缘植物）'],
+  answer:1,
+  explain:'说明Q是正确的。常春藤（Ivy）是攀缘植物，它攀附在高大的树上是为了获得更多阳光，满足自身生存需求，对宿主树没有明显伤害，这不是寄生关系。说明P错误是因为桫椤树（Cyathea）本身是树蕨，不是附生植物；如果说"某种附生植物附生在桫椤树上"则不同。附生植物的例子是鸟巢蕨。'
+},
+{
+  id:'C4ai', section:'C', type:'short', marks:1,
+  text:'C4. a. (i) 下图显示两种动物：动物S（三角龙/已灭绝恐龙）和动物T（熊猫/濒临绝种）。\n\n写出这两种动物的一个不同点。',
+  answer:'动物S是已灭绝的动物，动物T是濒临绝种的动物',
+  explain:'不同点：动物S（三角龙）是已灭绝的史前动物，现实中已完全消失；动物T（熊猫）是濒临绝种的动物，现在仍然存在但数量极少，需要保护。'
+},
+{
+  id:'C4aii', section:'C', type:'short', marks:1,
+  text:'C4. a. (ii) 根据1(a)i 项的答案，写出另一个和动物T面临相同情况的动物例子。',
+  answer:'马来亚虎 / 犀牛 / 象 / 红毛猩猩（任何一种濒危动物）',
+  explain:'动物T（熊猫）是濒临绝种的动物。马来西亚境内面临相同情况的例子有马来亚虎（Malayan Tiger），另外犀牛、大象、红毛猩猩也是全球知名的濒危物种。'
+},
+{
+  id:'C4bi', section:'C', type:'short', marks:1,
+  text:'C4. b. 下图显示我国的一则新闻（2024年5月16日，一只130公斤马来亚虎凌晨过马路遭撞毙）。\n\n(i) 根据以上的新闻，写出一个导致马来亚虎濒临绝种的因素。',
+  answer:'栖息地被破坏（马路建设侵占森林）/ 人类活动威胁',
+  explain:'新闻中老虎试图穿越高速公路，说明其栖息地（森林）被道路等人类基础设施切割，老虎被迫穿越道路，导致被车撞死。这反映出栖息地破坏（Habitat Destruction）是马来亚虎濒临绝种的因素。'
+},
+{
+  id:'C4bii', section:'C', type:'short', marks:1,
+  text:'C4. b. (ii) 如果这种情况继续发生，将会对马来亚虎带来什么影响？',
+  answer:'马来亚虎将会绝种',
+  explain:'如果马来亚虎持续被车辆撞死，加上栖息地不断减少，马来亚虎的数量将急剧下降，最终导致马来亚虎绝种（Extinction）。'
+},
+{
+  id:'C4ci', section:'C', type:'short', marks:1,
+  text:'C4. c. 写出两种因被人类大量采集并制成药物而濒临绝种的动植物。\n\n(i) 第一种：',
+  answer:'东革阿里（Tongkat Ali）/ 虎骨 / 熊胆 / 犀牛角',
+  explain:'东革阿里（Eurycoma longifolia）是马来西亚的草药植物，因被大量采集制成传统药物和补品而濒临绝种。'
+},
+{
+  id:'C4cii', section:'C', type:'short', marks:1,
+  text:'C4. c. (ii) 第二种：',
+  answer:'人参 / 虎骨 / 熊胆 / 犀牛角（与上不同的一种）',
+  explain:'人参（Ginseng）是被大量采集制成药物的植物；动物方面，老虎（虎骨）、熊（熊胆）、犀牛（犀牛角）都因被用于传统医药而遭到过度猎杀，濒临绝种。'
+},
+{
+  id:'C4d', section:'C', type:'mcq', marks:2,
+  text:'C4. d. 下图显示两种活动：\n活动X：两个小朋友种树\n活动Y：一个小朋友在河边捕鱼/捉水生动物\n\n哪个活动对保护和复育有贡献？说明原因。',
+  options:['活动X（种树）','活动Y（捕捉水生动物）'],
+  answer:0,
+  explain:'活动X（种树）对保护和复育有贡献，因为种植植物能重建动物的栖息地，增加绿化，有助于生态系统的恢复。活动Y（捕捉水生动物）反而会减少野生动物数量，对保育不利。'
+}
+
+]; // end QUESTIONS
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  answers: {},      // id -> user answer
+  submitted: {},    // id -> bool
+  scores: {},       // id -> marks earned
+};
+let totalMarks = 0;
+QUESTIONS.forEach(q => totalMarks += q.marks);
+
+// ═══════════════════════════════════════════════════════════════
+//  BUILD UI
+// ═══════════════════════════════════════════════════════════════
+function buildQuiz() {
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = '';
+
+  let currentSection = '';
+  const sectionNames = { A:'A 组  选择题（10%）', B:'B 组  简答题（8%）', C:'C 组  详答题（32%）' };
+  const sectionMarks = { A:'每题1分', B:'各题分数不同', C:'各题分数不同' };
+
+  QUESTIONS.forEach((q, idx) => {
+    if (q.section !== currentSection) {
+      currentSection = q.section;
+      const sh = document.createElement('div');
+      sh.className = 'section-header';
+      sh.innerHTML = `${sectionNames[currentSection]} <span>${sectionMarks[currentSection]}</span>`;
+      body.appendChild(sh);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'card-' + q.id;
+
+    let inner = `
+      <div class="q-header">
+        <div class="q-num">${idx+1}</div>
+        <div class="q-text">${q.text.replace(/\n/g,'<br>')}</div>
+        <div class="q-marks">[${q.marks}分]</div>
+      </div>`;
+
+    if (q.diagram) {
+      inner += `<div class="q-diagram">📊 ${q.diagram}</div>`;
+    }
+
+    inner += `<div class="q-body">`;
+
+    if (q.type === 'mcq') {
+      inner += buildMCQ(q);
+    } else if (q.type === 'short') {
+      inner += buildShort(q);
+    } else if (q.type === 'checkbox') {
+      inner += buildCheckbox(q);
+    } else if (q.type === 'match') {
+      inner += buildMatch(q);
+    }
+
+    inner += `
+      <button class="submit-btn" id="btn-${q.id}" onclick="submitQ('${q.id}')">确认答案 ✓</button>
+      <div class="feedback" id="fb-${q.id}"></div>
+    </div>`;
+
+    card.innerHTML = inner;
+    body.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function buildMCQ(q) {
+  const letters = ['A','B','C','D','E'];
+  let html = '<div class="options">';
+  q.options.forEach((opt, i) => {
+    html += `
+      <div class="option" id="opt-${q.id}-${i}" onclick="selectMCQ('${q.id}',${i})">
+        <div class="option-letter">${letters[i]}</div>
+        <div>${opt}</div>
+      </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function buildShort(q) {
+  if (q.subquestions) {
+    let html = '<div class="short-answer-group">';
+    q.subquestions.forEach((sub, i) => {
+      html += `
+        <div class="sub-label">${sub.label}</div>
+        <textarea id="sa-${q.id}-${i}" rows="2" placeholder="${sub.placeholder || '请在此填写答案...'}"></textarea>`;
+    });
+    html += '</div>';
+    return html;
+  }
+  return `<textarea id="sa-${q.id}" rows="3" placeholder="请在此填写答案..."></textarea>`;
+}
+
+function buildCheckbox(q) {
+  let html = '<div class="checkbox-group">';
+  q.options.forEach((opt, i) => {
+    html += `
+      <label class="checkbox-item">
+        <input type="checkbox" id="cb-${q.id}-${i}" value="${i}">
+        ${opt}
+      </label>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function buildMatch(q) {
+  let choicesHtml = q.choices.map((c,i)=>`<option value="${i}">${c}</option>`).join('');
+  let html = '';
+  q.items.forEach((item, i) => {
+    html += `
+      <div class="match-row">
+        <div class="match-left">${item}</div>
+        <select id="match-${q.id}-${i}">
+          <option value="">-- 选择 --</option>
+          ${choicesHtml}
+        </select>
+      </div>`;
+  });
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════════════════════════════
+function selectMCQ(qid, idx) {
+  if (state.submitted[qid]) return;
+  const q = QUESTIONS.find(x=>x.id===qid);
+  q.options.forEach((_,i) => {
+    const el = document.getElementById(`opt-${qid}-${i}`);
+    el.classList.toggle('selected', i===idx);
+  });
+  state.answers[qid] = idx;
+  updateProgress();
+}
+
+function submitQ(qid) {
+  if (state.submitted[qid]) return;
+  const q = QUESTIONS.find(x=>x.id===qid);
+  let earned = 0;
+  let userDisplay = '';
+  let isCorrect = false;
+
+  if (q.type === 'mcq') {
+    const ans = state.answers[qid];
+    if (ans === undefined) { alert('请先选择答案！'); return; }
+    isCorrect = ans === q.answer;
+    earned = isCorrect ? q.marks : 0;
+    const letters = ['A','B','C','D','E'];
+    userDisplay = `${letters[ans]} ${q.options[ans]}`;
+    // style options
+    q.options.forEach((_,i) => {
+      const el = document.getElementById(`opt-${qid}-${i}`);
+      el.classList.add('locked');
+      if (i === q.answer) el.classList.add('correct');
+      else if (i === ans && ans !== q.answer) el.classList.add('wrong');
+    });
+
+  } else if (q.type === 'short') {
+    if (q.subquestions) {
+      const vals = q.subquestions.map((_,i) => document.getElementById(`sa-${qid}-${i}`).value.trim());
+      userDisplay = vals.map((v,i)=>`(${i+1}) ${v||'（未作答）'}`).join(' ');
+      const filled = vals.filter(v=>v).length;
+      earned = filled > 0 ? Math.round(q.marks * filled / q.subquestions.length) : 0;
+      isCorrect = filled === q.subquestions.length;
+      q.subquestions.forEach((_,i) => {
+        const el = document.getElementById(`sa-${qid}-${i}`);
+        el.disabled = true;
+        el.classList.add(vals[i] ? 'correct-input' : 'wrong-input');
+      });
+    } else {
+      const val = document.getElementById(`sa-${qid}`).value.trim();
+      userDisplay = val || '（未作答）';
+      earned = val ? q.marks : 0;
+      isCorrect = !!val;
+      const el = document.getElementById(`sa-${qid}`);
+      el.disabled = true;
+      el.classList.add(val ? 'correct-input' : 'wrong-input');
+    }
+
+  } else if (q.type === 'checkbox') {
+    const checked = [];
+    q.options.forEach((_,i) => {
+      if (document.getElementById(`cb-${qid}-${i}`).checked) checked.push(i);
+      document.getElementById(`cb-${qid}-${i}`).disabled = true;
+    });
+    const correct = JSON.stringify(checked.sort()) === JSON.stringify(q.answer.sort());
+    isCorrect = correct;
+    earned = correct ? q.marks : (checked.length > 0 ? Math.floor(q.marks/2) : 0);
+    userDisplay = checked.length > 0 ? checked.map(i=>q.options[i]).join('、') : '（未作答）';
+
+  } else if (q.type === 'match') {
+    const vals = q.items.map((_,i) => {
+      const v = document.getElementById(`match-${qid}-${i}`).value;
+      document.getElementById(`match-${qid}-${i}`).disabled = true;
+      return v === '' ? null : parseInt(v);
+    });
+    const correct = vals.every((v,i) => v === q.answer[i]);
+    isCorrect = correct;
+    earned = correct ? q.marks : 0;
+    userDisplay = vals.map((v,i) => `${q.items[i]} → ${v!==null ? q.choices[v] : '（未选）'}`).join(' | ');
+    vals.forEach((v,i) => {
+      const el = document.getElementById(`match-${qid}-${i}`);
+      el.classList.add(v === q.answer[i] ? 'correct-input' : 'wrong-input');
+    });
+  }
+
+  state.submitted[qid] = true;
+  state.scores[qid] = earned;
+  state.answers[qid + '_display'] = userDisplay;
+
+  // Card border
+  const card = document.getElementById(`card-${qid}`);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+  // Feedback
+  const fb = document.getElementById(`fb-${qid}`);
+  fb.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+  fb.style.display = 'block';
+  if (isCorrect) {
+    fb.innerHTML = `<div class="fb-title">✅ 答对了！获得 ${earned}/${q.marks} 分</div>
+      <div class="fb-explain">${q.explain}</div>`;
+  } else {
+    let correctDisplay = '';
+    if (q.type === 'mcq') {
+      const letters = ['A','B','C','D','E'];
+      correctDisplay = `${letters[q.answer]} ${q.options[q.answer]}`;
+    } else if (q.type === 'short') {
+      correctDisplay = q.subquestions ? q.subquestions.map(s=>s.answer).join(' | ') : q.answer;
+    } else if (q.type === 'checkbox') {
+      correctDisplay = q.answer.map(i=>q.options[i]).join('、');
+    } else if (q.type === 'match') {
+      correctDisplay = q.items.map((item,i)=>`${item} → ${q.choices[q.answer[i]]}`).join(' | ');
+    }
+    fb.innerHTML = `<div class="fb-title">❌ 答错了！获得 ${earned}/${q.marks} 分</div>
+      <div class="fb-answer">✅ 正确答案：${correctDisplay}</div>
+      <div class="fb-explain">📖 解析：${q.explain}</div>`;
+  }
+
+  document.getElementById(`btn-${qid}`).disabled = true;
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = QUESTIONS.length;
+  const done = Object.keys(state.submitted).length;
+  const totalScore = Object.values(state.scores).reduce((a,b)=>a+b,0);
+  document.getElementById('progress-label').textContent = `题目 ${done} / ${total}`;
+  document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
+  document.getElementById('score-live').textContent = `${totalScore} 分`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FINAL SUBMIT
+// ═══════════════════════════════════════════════════════════════
+function submitAll() {
+  // Submit any unanswered
+  QUESTIONS.forEach(q => { if (!state.submitted[q.id]) submitQ(q.id); });
+
+  const totalScore = Object.values(state.scores).reduce((a,b)=>a+b,0);
+  const pct = Math.round((totalScore / totalMarks) * 100);
+  const correct = QUESTIONS.filter(q => state.scores[q.id] === q.marks).length;
+  const wrong = QUESTIONS.length - correct;
+
+  let trophy = '🌟', msg = '';
+  if (pct >= 90) { trophy = '🏆'; msg = '太棒了！Excellent!'; }
+  else if (pct >= 75) { trophy = '🌟'; msg = '做得很好！Well done!'; }
+  else if (pct >= 60) { trophy = '📚'; msg = '继续加油！Keep it up!'; }
+  else { trophy = '💪'; msg = '要更努力哦！Try harder!'; }
+
+  document.getElementById('quiz-main').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'block';
+
+  let html = `
+    <div class="results-hero">
+      <div class="trophy">${trophy}</div>
+      <h2>${msg}</h2>
+      <div class="score-big">${totalScore}<span style="font-size:28px;opacity:0.6">/${totalMarks}</span></div>
+      <div class="score-sub">${pct}% · Elyse 科学备考</div>
+    </div>
+    <div class="results-grid">
+      <div class="stat-card green"><div class="stat-val">${correct}</div><div class="stat-label">✅ 答对题数</div></div>
+      <div class="stat-card red"><div class="stat-val">${wrong}</div><div class="stat-label">❌ 答错题数</div></div>
+      <div class="stat-card blue"><div class="stat-val">${pct}%</div><div class="stat-label">📊 得分率</div></div>
+    </div>`;
+
+  // Wrong answers review
+  const wrongQs = QUESTIONS.filter(q => state.scores[q.id] < q.marks);
+  if (wrongQs.length > 0) {
+    html += `<div class="wrong-section-title">❌ 错题解析 — Review Wrong Answers</div>`;
+    const qNums = {};
+    QUESTIONS.forEach((q,i) => qNums[q.id] = i+1);
+    wrongQs.forEach(q => {
+      let correctDisplay = '';
+      if (q.type === 'mcq') {
+        const letters = ['A','B','C','D','E'];
+        correctDisplay = `${letters[q.answer]} ${q.options[q.answer]}`;
+      } else if (q.type === 'short') {
+        correctDisplay = q.subquestions ? q.subquestions.map(s=>s.answer).join(' | ') : q.answer;
+      } else if (q.type === 'checkbox') {
+        correctDisplay = q.answer.map(i=>q.options[i]).join('、');
+      } else if (q.type === 'match') {
+        correctDisplay = q.items.map((item,i)=>`${item} → ${q.choices[q.answer[i]]}`).join(' | ');
+      }
+      const userAns = state.answers[q.id + '_display'] || state.answers[q.id] ?? '（未作答）';
+      html += `
+        <div class="review-card">
+          <div class="review-card-header">❌ 题目 ${qNums[q.id]} — 得分 ${state.scores[q.id]}/${q.marks} 分</div>
+          <div class="review-card-body">
+            <div class="rc-q">${q.text.replace(/\n/g,'<br>')}</div>
+            <div class="rc-yours">你的答案：${typeof userAns === 'number' ? `${['A','B','C','D'][userAns]} ${q.options[userAns]}` : userAns}</div>
+            <div class="rc-correct">✅ 正确答案：${correctDisplay}</div>
+            <div class="rc-explain">📖 解析：${q.explain}</div>
+          </div>
+        </div>`;
+    });
+  } else {
+    html += `<div style="text-align:center;padding:32px;font-size:18px;color:var(--green);font-weight:700;">🎉 全部答对了！Amazing Elyse!</div>`;
+  }
+
+  html += `<button id="retry-btn" onclick="retryQuiz()">🔄 重新练习 Retry</button>`;
+  rs.innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryQuiz() {
+  state.answers = {};
+  state.submitted = {};
+  state.scores = {};
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-main').style.display = 'block';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+buildQuiz();
+</script>
+</body>
+</html>
